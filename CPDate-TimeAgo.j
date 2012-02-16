@@ -56,7 +56,7 @@ var TimeAgoSettings =
 
 var distance = function(date)
 {
-  return (new Date().getTime() - date.getTime());
+    return (new Date().getTime() - date.getTime());
 }
 
 var substitute = function(string, value)
