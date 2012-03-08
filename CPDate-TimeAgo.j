@@ -31,28 +31,28 @@
  */
 
 var TimeAgoSettings =
-{
-    refreshMillis: 60000,
-    allowFuture: false,
-    strings:
     {
-        prefixAgo: null,
-        prefixFromNow: null,
-        suffixAgo: "ago",
-        suffixFromNow: "from now",
-        seconds: "less than a minute",
-        minute: "about a minute",
-        minutes: "%d minutes",
-        hour: "about an hour",
-        hours: "about %d hours",
-        day: "a day",
-        days: "%d days",
-        month: "about a month",
-        months: "%d months",
-        year: "about a year",
-        years: "%d years"
-    }
-};
+        refreshMillis: 60000,
+        allowFuture: false,
+        strings:
+        {
+            prefixAgo: null,
+            prefixFromNow: null,
+            suffixAgo: "ago",
+            suffixFromNow: "from now",
+            seconds: "less than a minute",
+            minute: "about a minute",
+            minutes: "%d minutes",
+            hour: "about an hour",
+            hours: "about %d hours",
+            day: "a day",
+            days: "%d days",
+            month: "about a month",
+            months: "%d months",
+            year: "about a year",
+            years: "%d years"
+        }
+    };
 
 var distance = function(date)
 {
@@ -61,9 +61,8 @@ var distance = function(date)
 
 var substitute = function(string, value)
 {
-    return string.replace(/%d/i, value);
+    return string.replace(new RegExp("%d", "i"), value);
 }
-
 
 @implementation CPDate (TimeAgo)
 
