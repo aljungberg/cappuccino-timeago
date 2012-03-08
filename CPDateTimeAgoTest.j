@@ -39,4 +39,12 @@
     [self assert:"about a month ago" equals:[[CPDate dateWithTimeIntervalSinceNow:(-3600 * 24 * 30)] timeAgo]];
 }
 
+- (void)testTimeInFuture
+{
+    [self assert:"less than a minute ago" equals:[[CPDate date] timeAgoWithFuture:YES]];
+    [self assert:"about a minute from now" equals:[[CPDate dateWithTimeIntervalSinceNow:+60] timeAgoWithFuture:YES]];
+    [self assert:"2 minutes from now" equals:[[CPDate dateWithTimeIntervalSinceNow:+90] timeAgoWithFuture:YES]];
+    [self assert:"about a month from now" equals:[[CPDate dateWithTimeIntervalSinceNow:(3600 * 24 * 30)] timeAgoWithFuture:YES]];
+}
+
 @end

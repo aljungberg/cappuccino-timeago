@@ -30,10 +30,11 @@
  * SOFTWARE.
  */
 
+CPDateTimeAgoAllowFutureOption = @"CPDateTimeAgoAllowFutureOption";
+
 var TimeAgoSettings =
     {
         refreshMillis: 60000,
-        allowFuture: false,
         strings:
         {
             prefixAgo: null,
@@ -68,12 +69,23 @@ var substitute = function(string, value)
 
 - (CPString)timeAgo
 {
+    return [self timeAgoWithOptions:nil];
+}
+
+- (CPString)timeAgoWithFuture:(BOOL)shouldIncludeFuture
+{
+    return [self timeAgoWithOptions:[CPDictionary dictionaryWithObject:shouldIncludeFuture forKey:CPDateTimeAgoAllowFutureOption]];
+}
+
+- (CPString)timeAgoWithOptions:(CPDictionary)options
+{
     var distanceMillis = distance(self),
         l = TimeAgoSettings.strings,
         prefix = l.prefixAgo,
-        suffix = l.suffixAgo || l.ago;
+        suffix = l.suffixAgo || l.ago,
+        allowFuture = [options containsKey:CPDateTimeAgoAllowFutureOption] ? [options objectForKey:CPDateTimeAgoAllowFutureOption] : NO;
 
-    if (TimeAgoSettings.allowFuture)
+    if (allowFuture)
     {
         if (distanceMillis < 0)
         {
@@ -105,7 +117,19 @@ var substitute = function(string, value)
 
 @end
 
-@implementation TimeAgoTransformer : CPValueTransformer
+@implementation TimeAgoTransformerWithOptions : CPValueTransformer
+{
+    CPDictionary options;
+}
+
+- (id)initWithOptions:(CPDictionary)someOptions
+{
+    if (self = [super init])
+    {
+        options = someOptions;
+    }
+    return self;
+}
 
 + (BOOL)allowsReverseTransformation
 {
@@ -119,7 +143,25 @@ var substitute = function(string, value)
 
 - (id)transformedValue:(id)value
 {
-    return [value timeAgo];
+    return [value timeAgoWithOptions:options];
+}
+
+@end
+
+@implementation TimeAgoTransformer : TimeAgoTransformerWithOptions
+
+- (id)init
+{
+    return [super initWithOptions:[CPDictionary dictionaryWithObject:NO forKey:CPDateTimeAgoAllowFutureOption]];
+}
+
+@end
+
+@implementation TimeAgoFutureTransformer : TimeAgoTransformerWithOptions
+
+- (id)init
+{
+    return [super initWithOptions:[CPDictionary dictionaryWithObject:YES forKey:CPDateTimeAgoAllowFutureOption]];
 }
 
 @end
